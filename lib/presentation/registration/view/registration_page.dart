@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,10 +11,8 @@ import 'package:gift_manager/navigation/route_name.dart';
 import 'package:gift_manager/presentation/registration/bloc/registration_bloc.dart';
 import 'package:gift_manager/resources/app_colors.dart';
 
-import '../../home/view/home_page.dart';
-
 class RegistrationPage extends StatelessWidget {
-  const RegistrationPage({Key? key}) : super(key: key);
+  const RegistrationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +26,7 @@ class RegistrationPage extends StatelessWidget {
 }
 
 class _RegistrationPageWidget extends StatefulWidget {
-  const _RegistrationPageWidget({
-    Key? key,
-  }) : super(key: key);
+  const _RegistrationPageWidget({super.key});
 
   @override
   State<_RegistrationPageWidget> createState() => _LoginPageWidgetState();
@@ -48,30 +46,23 @@ class _LoginPageWidgetState extends State<_RegistrationPageWidget> {
     _passwordConfirmationFocusNode = FocusNode();
     _nameFocusNode = FocusNode();
 
-    SchedulerBinding.instance
-        .addPostFrameCallback((_) => _addFocusLostHandlers());
+    SchedulerBinding.instance.addPostFrameCallback((_) => _addFocusLostHandlers());
   }
 
   void _addFocusLostHandlers() {
     _emailFocusNode.addListener(() {
       if (!_emailFocusNode.hasFocus) {
-        context
-            .read<RegistrationBloc>()
-            .add(const RegistrationEmailFocusLost());
+        context.read<RegistrationBloc>().add(const RegistrationEmailFocusLost());
       }
     });
     _passwordFocusNode.addListener(() {
       if (!_passwordFocusNode.hasFocus) {
-        context
-            .read<RegistrationBloc>()
-            .add(const RegistrationPasswordFocusLost());
+        context.read<RegistrationBloc>().add(const RegistrationPasswordFocusLost());
       }
     });
     _passwordConfirmationFocusNode.addListener(() {
       if (!_passwordConfirmationFocusNode.hasFocus) {
-        context
-            .read<RegistrationBloc>()
-            .add(const RegistrationPasswordConfirmationFocusLost());
+        context.read<RegistrationBloc>().add(const RegistrationPasswordConfirmationFocusLost());
       }
     });
     _nameFocusNode.addListener(() {
@@ -95,9 +86,11 @@ class _LoginPageWidgetState extends State<_RegistrationPageWidget> {
     return BlocListener<RegistrationBloc, RegistrationState>(
       listener: (context, state) {
         if (state is RegistrationCompleted) {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            RouteName.home.route,
-            (route) => false,
+          unawaited(
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              RouteName.home.route,
+              (route) => false,
+            ),
           );
         }
       },
@@ -121,12 +114,10 @@ class _LoginPageWidgetState extends State<_RegistrationPageWidget> {
                     ),
                     _PasswordTextField(
                       passwordFocusNode: _passwordFocusNode,
-                      passwordConfirmationFocusNode:
-                          _passwordConfirmationFocusNode,
+                      passwordConfirmationFocusNode: _passwordConfirmationFocusNode,
                     ),
                     _PasswordConfirmationTextField(
-                      passwordConfirmationFocusNode:
-                          _passwordConfirmationFocusNode,
+                      passwordConfirmationFocusNode: _passwordConfirmationFocusNode,
                       nameFocusNode: _nameFocusNode,
                     ),
                     _NameTextField(
@@ -148,12 +139,11 @@ class _LoginPageWidgetState extends State<_RegistrationPageWidget> {
 
 class _EmailTextField extends StatelessWidget {
   const _EmailTextField({
-    Key? key,
     required FocusNode emailFocusNode,
     required FocusNode passwordFocusNode,
+    super.key,
   })  : _emailFocusNode = emailFocusNode,
-        _passwordFocusNode = passwordFocusNode,
-        super(key: key);
+        _passwordFocusNode = passwordFocusNode;
 
   final FocusNode _emailFocusNode;
   final FocusNode _passwordFocusNode;
@@ -169,9 +159,7 @@ class _EmailTextField extends StatelessWidget {
           final error = fieldsInfo.emailError;
           return TextField(
             focusNode: _emailFocusNode,
-            onChanged: (text) => context
-                .read<RegistrationBloc>()
-                .add(RegistrationEmailChanged(text)),
+            onChanged: (text) => context.read<RegistrationBloc>().add(RegistrationEmailChanged(text)),
             onSubmitted: (_) => _passwordFocusNode.requestFocus(),
             autocorrect: false,
             keyboardType: TextInputType.emailAddress,
@@ -188,12 +176,11 @@ class _EmailTextField extends StatelessWidget {
 
 class _PasswordTextField extends StatelessWidget {
   const _PasswordTextField({
-    Key? key,
     required FocusNode passwordFocusNode,
     required FocusNode passwordConfirmationFocusNode,
+    super.key,
   })  : _passwordFocusNode = passwordFocusNode,
-        _passwordConfirmationFocusNode = passwordConfirmationFocusNode,
-        super(key: key);
+        _passwordConfirmationFocusNode = passwordConfirmationFocusNode;
 
   final FocusNode _passwordFocusNode;
   final FocusNode _passwordConfirmationFocusNode;
@@ -209,9 +196,7 @@ class _PasswordTextField extends StatelessWidget {
           final error = fieldsInfo.passwordError;
           return TextField(
             focusNode: _passwordFocusNode,
-            onChanged: (text) => context
-                .read<RegistrationBloc>()
-                .add(RegistrationPasswordChanged(text)),
+            onChanged: (text) => context.read<RegistrationBloc>().add(RegistrationPasswordChanged(text)),
             onSubmitted: (_) => _passwordConfirmationFocusNode.requestFocus(),
             autocorrect: false,
             obscureText: true,
@@ -229,12 +214,11 @@ class _PasswordTextField extends StatelessWidget {
 
 class _PasswordConfirmationTextField extends StatelessWidget {
   const _PasswordConfirmationTextField({
-    Key? key,
     required FocusNode passwordConfirmationFocusNode,
     required FocusNode nameFocusNode,
+    super.key,
   })  : _passwordConfirmationFocusNode = passwordConfirmationFocusNode,
-        _nameFocusNode = nameFocusNode,
-        super(key: key);
+        _nameFocusNode = nameFocusNode;
 
   final FocusNode _passwordConfirmationFocusNode;
   final FocusNode _nameFocusNode;
@@ -250,9 +234,7 @@ class _PasswordConfirmationTextField extends StatelessWidget {
           final error = fieldsInfo.passwordConfirmationError;
           return TextField(
             focusNode: _passwordConfirmationFocusNode,
-            onChanged: (text) => context
-                .read<RegistrationBloc>()
-                .add(RegistrationPasswordConfirmationChanged(text)),
+            onChanged: (text) => context.read<RegistrationBloc>().add(RegistrationPasswordConfirmationChanged(text)),
             onSubmitted: (_) => _nameFocusNode.requestFocus(),
             autocorrect: false,
             obscureText: true,
@@ -269,11 +251,7 @@ class _PasswordConfirmationTextField extends StatelessWidget {
 }
 
 class _NameTextField extends StatelessWidget {
-  const _NameTextField({
-    Key? key,
-    required FocusNode nameFocusNode,
-  })  : _nameFocusNode = nameFocusNode,
-        super(key: key);
+  const _NameTextField({required FocusNode nameFocusNode, super.key}) : _nameFocusNode = nameFocusNode;
 
   final FocusNode _nameFocusNode;
 
@@ -288,9 +266,7 @@ class _NameTextField extends StatelessWidget {
           final error = fieldsInfo.nameError;
           return TextField(
             focusNode: _nameFocusNode,
-            onChanged: (text) => context
-                .read<RegistrationBloc>()
-                .add(RegistrationNameChanged(text)),
+            onChanged: (text) => context.read<RegistrationBloc>().add(RegistrationNameChanged(text)),
             onSubmitted: (_) => FocusManager.instance.primaryFocus?.unfocus(),
             autocorrect: false,
             keyboardType: TextInputType.name,
@@ -306,9 +282,7 @@ class _NameTextField extends StatelessWidget {
 }
 
 class _AvatarWidget extends StatelessWidget {
-  const _AvatarWidget({
-    Key? key,
-  }) : super(key: key);
+  const _AvatarWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -345,9 +319,7 @@ class _AvatarWidget extends StatelessWidget {
           const SizedBox(width: 8),
           const Spacer(),
           TextButton(
-            onPressed: () => context
-                .read<RegistrationBloc>()
-                .add(const RegistrationChangeAvatar()),
+            onPressed: () => context.read<RegistrationBloc>().add(const RegistrationChangeAvatar()),
             child: const Text('Изменить'),
           ),
         ],
@@ -357,9 +329,7 @@ class _AvatarWidget extends StatelessWidget {
 }
 
 class _RegisterButton extends StatelessWidget {
-  const _RegisterButton({
-    Key? key,
-  }) : super(key: key);
+  const _RegisterButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -371,12 +341,9 @@ class _RegisterButton extends StatelessWidget {
           selector: (state) => state is RegistrationInProgress,
           builder: (context, inProgress) {
             return ElevatedButton(
-              onPressed: inProgress
-                  ? null
-                  : () => context
-                      .read<RegistrationBloc>()
-                      .add(const RegistrationCreateAccount()),
-              child: const Text("Создать"),
+              onPressed:
+                  inProgress ? null : () => context.read<RegistrationBloc>().add(const RegistrationCreateAccount()),
+              child: const Text('Создать'),
             );
           },
         ),

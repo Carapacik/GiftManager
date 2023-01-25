@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
 
 abstract class ReactiveRepository<T> {
+  // ignore: prefer_void_to_null
   final updater = PublishSubject<Null>();
 
   @protected

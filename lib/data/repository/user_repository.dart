@@ -10,8 +10,7 @@ class UserRepository extends ReactiveRepository<UserDto> {
   final SharedPreferenceData _spData;
 
   @override
-  UserDto convertFromString(String rawItem) =>
-      UserDto.fromJson(json.decode(rawItem));
+  UserDto convertFromString(String rawItem) => UserDto.fromJson(json.decode(rawItem) as Map<String, dynamic>);
 
   @override
   String convertToString(UserDto item) => json.encode(item.toJson());

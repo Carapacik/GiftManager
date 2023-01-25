@@ -18,11 +18,32 @@ part 'registration_event.dart';
 part 'registration_state.dart';
 
 class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
-  static const _defaultAvatarKey = 'test';
-  static final _registrationPasswordRegexp = RegExp(r'^[a-zA-Z0-9]+$');
+  RegistrationBloc({
+    required this.userRepository,
+    required this.tokenRepository,
+    required this.refreshTokenRepository,
+    required this.unauthorizedApiService,
+  }) : super(
+          RegistrationFieldsInfo(
+            avatarLink: _avatarBuilder(_defaultAvatarKey),
+          ),
+        ) {
+    on<RegistrationChangeAvatar>(_onChangeAvatar);
+    on<RegistrationEmailChanged>(_onEmailChanged);
+    on<RegistrationEmailFocusLost>(_onEmailFocusLost);
+    on<RegistrationPasswordChanged>(_onPasswordChanged);
+    on<RegistrationPasswordFocusLost>(_onPasswordFocusLost);
+    on<RegistrationPasswordConfirmationChanged>(_onPasswordConfirmationChanged);
+    on<RegistrationPasswordConfirmationFocusLost>(_onPasswordConfirmationFocusLost);
+    on<RegistrationNameChanged>(_onNameChanged);
+    on<RegistrationNameFocusLost>(_onNameFocusLost);
+    on<RegistrationCreateAccount>(_onCreateAccount);
+  }
 
-  static String _avatarBuilder(String key) =>
-      'https://avatars.dicebear.com/api/croodles/$key.svg';
+  static const _defaultAvatarKey = 'test';
+  static final _registrationPasswordRegexp = RegExp(r'^[a-zA-Z\d]+$');
+
+  static String _avatarBuilder(String key) => 'https://avatars.dicebear.com/api/croodles/$key.svg';
 
   String _avatarKey = _defaultAvatarKey;
 
@@ -36,8 +57,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
   String _passwordConfirmation = '';
   bool _highlightPasswordConfirmationError = false;
-  RegistrationPasswordConfirmationError? _passwordConfirmationError =
-      RegistrationPasswordConfirmationError.empty;
+  RegistrationPasswordConfirmationError? _passwordConfirmationError = RegistrationPasswordConfirmationError.empty;
 
   String _name = '';
   bool _highlightNameError = false;
@@ -47,27 +67,6 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   final TokenRepository tokenRepository;
   final RefreshTokenRepository refreshTokenRepository;
   final UnauthorizedApiService unauthorizedApiService;
-
-  RegistrationBloc({
-    required this.userRepository,
-    required this.tokenRepository,
-    required this.refreshTokenRepository,
-    required this.unauthorizedApiService,
-  }) : super(RegistrationFieldsInfo(
-          avatarLink: _avatarBuilder(_defaultAvatarKey),
-        )) {
-    on<RegistrationChangeAvatar>(_onChangeAvatar);
-    on<RegistrationEmailChanged>(_onEmailChanged);
-    on<RegistrationEmailFocusLost>(_onEmailFocusLost);
-    on<RegistrationPasswordChanged>(_onPasswordChanged);
-    on<RegistrationPasswordFocusLost>(_onPasswordFocusLost);
-    on<RegistrationPasswordConfirmationChanged>(_onPasswordConfirmationChanged);
-    on<RegistrationPasswordConfirmationFocusLost>(
-        _onPasswordConfirmationFocusLost);
-    on<RegistrationNameChanged>(_onNameChanged);
-    on<RegistrationNameFocusLost>(_onNameFocusLost);
-    on<RegistrationCreateAccount>(_onCreateAccount);
-  }
 
   FutureOr<void> _onChangeAvatar(
     final RegistrationChangeAvatar event,
@@ -155,10 +154,8 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     _highlightPasswordConfirmationError = true;
     _highlightNameError = true;
     emit(_calculateFieldsInfo());
-    final haveError = _emailError != null ||
-        _passwordError != null ||
-        _passwordConfirmationError != null ||
-        _nameError != null;
+    final haveError =
+        _emailError != null || _passwordError != null || _passwordConfirmationError != null || _nameError != null;
     if (haveError) {
       return;
     }
@@ -191,9 +188,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       avatarLink: _avatarBuilder(_avatarKey),
       emailError: _highlightEmailError ? _emailError : null,
       passwordError: _highlightPasswordError ? _passwordError : null,
-      passwordConfirmationError: _highlightPasswordConfirmationError
-          ? _passwordConfirmationError
-          : null,
+      passwordConfirmationError: _highlightPasswordConfirmationError ? _passwordConfirmationError : null,
       nameError: _highlightNameError ? _nameError : null,
     );
   }

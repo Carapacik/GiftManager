@@ -1,4 +1,4 @@
-package ru.skillbranch.gift_manager
+package com.carapacik.giftmanager
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -6,7 +6,6 @@ import 'package:gift_manager/data/http/authorized_api_service.dart';
 import 'package:gift_manager/data/http/model/gift_dto.dart';
 
 part 'gifts_event.dart';
-
 part 'gifts_state.dart';
 
 class GiftsBloc extends Bloc<GiftsEvent, GiftsState> {
@@ -112,8 +111,7 @@ class PaginationInfo extends Equatable {
     required this.lastLoadedPage,
   });
 
-  factory PaginationInfo.initial() =>
-      const PaginationInfo(canLoadMore: true, lastLoadedPage: 0);
+  factory PaginationInfo.initial() => const PaginationInfo(canLoadMore: true, lastLoadedPage: 0);
 
   final bool canLoadMore;
   final int lastLoadedPage;

@@ -11,10 +11,7 @@ class GiftPageArgs extends Equatable {
 }
 
 class GiftPage extends StatelessWidget {
-  const GiftPage({
-    Key? key,
-    required this.args,
-  }) : super(key: key);
+  const GiftPage({required this.args, super.key});
 
   final GiftPageArgs args;
 

@@ -1,15 +1,6 @@
 part of 'login_bloc.dart';
 
 class LoginState extends Equatable {
-  final String email;
-  final EmailError emailError;
-  final String password;
-  final PasswordError passwordError;
-  final bool emailValid;
-  final bool passwordValid;
-  final bool authenticated;
-  final RequestError requestError;
-
   const LoginState({
     required this.email,
     required this.emailError,
@@ -21,8 +12,6 @@ class LoginState extends Equatable {
     required this.requestError,
   });
 
-  bool get allFieldsValid => emailValid && passwordValid;
-
   factory LoginState.initial() => const LoginState(
         email: '',
         emailError: EmailError.noError,
@@ -33,6 +22,16 @@ class LoginState extends Equatable {
         authenticated: false,
         requestError: RequestError.noError,
       );
+  final String email;
+  final EmailError emailError;
+  final String password;
+  final PasswordError passwordError;
+  final bool emailValid;
+  final bool passwordValid;
+  final bool authenticated;
+  final RequestError requestError;
+
+  bool get allFieldsValid => emailValid && passwordValid;
 
   LoginState copyWith({
     final String? email,

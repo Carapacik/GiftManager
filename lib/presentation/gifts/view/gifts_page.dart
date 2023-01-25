@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,7 +12,7 @@ import 'package:gift_manager/resources/app_colors.dart';
 import 'package:gift_manager/resources/illustrations.dart';
 
 class GiftsPage extends StatelessWidget {
-  const GiftsPage({Key? key}) : super(key: key);
+  const GiftsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class GiftsPage extends StatelessWidget {
 }
 
 class _GiftsPageWidget extends StatelessWidget {
-  const _GiftsPageWidget({Key? key}) : super(key: key);
+  const _GiftsPageWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,7 @@ class _GiftsPageWidget extends StatelessWidget {
             );
           }
           debugPrint('Unknown state: $state');
-          return const Center(child: Text("GIFTS PAGE"));
+          return const Center(child: Text('GIFTS PAGE'));
         },
       ),
     );
@@ -51,7 +53,7 @@ class _GiftsPageWidget extends StatelessWidget {
 }
 
 class _LoadingWidget extends StatelessWidget {
-  const _LoadingWidget({Key? key}) : super(key: key);
+  const _LoadingWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +62,7 @@ class _LoadingWidget extends StatelessWidget {
 }
 
 class _NoGiftsWidget extends StatelessWidget {
-  const _NoGiftsWidget({Key? key}) : super(key: key);
+  const _NoGiftsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +90,7 @@ class _NoGiftsWidget extends StatelessWidget {
 }
 
 class _InitialLoadingErrorWidget extends StatelessWidget {
-  const _InitialLoadingErrorWidget({Key? key}) : super(key: key);
+  const _InitialLoadingErrorWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -113,8 +115,7 @@ class _InitialLoadingErrorWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40),
           child: ElevatedButton(
-            onPressed: () =>
-                context.read<GiftsBloc>().add(const GiftsLoadingRequest()),
+            onPressed: () => context.read<GiftsBloc>().add(const GiftsLoadingRequest()),
             child: Text(
               'Попробовать снова'.toUpperCase(),
             ),
@@ -128,11 +129,11 @@ class _InitialLoadingErrorWidget extends StatelessWidget {
 
 class _GiftsListWidget extends StatefulWidget {
   const _GiftsListWidget({
-    Key? key,
     required this.gifts,
     required this.showLoading,
     required this.showError,
-  }) : super(key: key);
+    super.key,
+  });
 
   final List<GiftDto> gifts;
   final bool showLoading;
@@ -196,8 +197,7 @@ class _GiftsListWidgetState extends State<_GiftsListWidget> {
             );
           } else {
             if (!widget.showError) {
-              debugPrint(
-                  'index = gifts.length + 1 but showLoading = false && showError = false');
+              debugPrint('index = gifts.length + 1 but showLoading = false && showError = false');
             }
             return Container(
               height: 128,
@@ -211,13 +211,11 @@ class _GiftsListWidgetState extends State<_GiftsListWidget> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text('Не удалось загрузить данные'),
-                  Text('Попробуйте еще раз'),
+                  const Text('Не удалось загрузить данные'),
+                  const Text('Попробуйте еще раз'),
                   TextButton(
-                    onPressed: () => context
-                        .read<GiftsBloc>()
-                        .add(const GiftsLoadingRequest()),
-                    child: Text('Попробовать еще раз'),
+                    onPressed: () => context.read<GiftsBloc>().add(const GiftsLoadingRequest()),
+                    child: const Text('Попробовать еще раз'),
                   )
                 ],
               ),
@@ -234,19 +232,18 @@ class _GiftsListWidgetState extends State<_GiftsListWidget> {
 }
 
 class _GiftCard extends StatelessWidget {
-  const _GiftCard({
-    Key? key,
-    required this.gift,
-  }) : super(key: key);
+  const _GiftCard({required this.gift, super.key});
 
   final GiftDto gift;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.of(context).pushNamed(
-        RouteName.gift.route,
-        arguments: GiftPageArgs(gift.name),
+      onTap: () => unawaited(
+        Navigator.of(context).pushNamed(
+          RouteName.gift.route,
+          arguments: GiftPageArgs(gift.name),
+        ),
       ),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),

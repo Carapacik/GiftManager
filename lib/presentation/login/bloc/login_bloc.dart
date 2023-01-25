@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:either_dart/either.dart';
@@ -13,19 +12,12 @@ import 'package:gift_manager/data/model/request_error.dart';
 import 'package:gift_manager/data/repository/refresh_token_repository.dart';
 import 'package:gift_manager/data/repository/token_repository.dart';
 import 'package:gift_manager/data/repository/user_repository.dart';
-import 'package:gift_manager/di/service_locator.dart';
 import 'package:gift_manager/presentation/login/model/models.dart';
 
 part 'login_event.dart';
-
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final UserRepository userRepository;
-  final TokenRepository tokenRepository;
-  final RefreshTokenRepository refreshTokenRepository;
-  final UnauthorizedApiService unauthorizedApiService;
-
   LoginBloc({
     required this.userRepository,
     required this.tokenRepository,
@@ -38,33 +30,39 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginRequestErrorShowed>(_requestErrorShowed);
   }
 
+  final UserRepository userRepository;
+  final TokenRepository tokenRepository;
+  final RefreshTokenRepository refreshTokenRepository;
+  final UnauthorizedApiService unauthorizedApiService;
+
   FutureOr<void> _loginButtonClicked(
     LoginLoginButtonClicked event,
     Emitter<LoginState> emit,
   ) async {
-    if (state.allFieldsValid) {
-      final response =
-          await _login(email: state.email, password: state.password);
-      if (response.isRight) {
-        final userWithTokens = response.right;
-        await userRepository.setItem(userWithTokens.user);
-        await tokenRepository.setItem(userWithTokens.token);
-        await refreshTokenRepository.setItem(userWithTokens.refreshToken);
-        emit(state.copyWith(authenticated: true));
-      } else {
-        final apiError = response.left;
-        switch (apiError.errorType) {
-          case ApiErrorType.incorrectPassword:
-            emit(state.copyWith(passwordError: PasswordError.wrongPassword));
-            break;
-          case ApiErrorType.notFound:
-            emit(state.copyWith(emailError: EmailError.notExist));
-            break;
-          default:
-            emit(state.copyWith(requestError: RequestError.unknown));
-            break;
-        }
-      }
+    if (!state.allFieldsValid) {
+      return;
+    }
+    final response = await _login(email: state.email, password: state.password);
+    if (response.isRight) {
+      final userWithTokens = response.right;
+      await userRepository.setItem(userWithTokens.user);
+      await tokenRepository.setItem(userWithTokens.token);
+      await refreshTokenRepository.setItem(userWithTokens.refreshToken);
+      emit(state.copyWith(authenticated: true));
+      return;
+    }
+    final apiError = response.left;
+    switch (apiError.errorType) {
+      case ApiErrorType.incorrectPassword:
+        emit(state.copyWith(passwordError: PasswordError.wrongPassword));
+        break;
+      case ApiErrorType.notFound:
+        emit(state.copyWith(emailError: EmailError.notExist));
+        break;
+      case ApiErrorType.missingParams:
+      case ApiErrorType.unknown:
+        emit(state.copyWith(requestError: RequestError.unknown));
+        break;
     }
   }
 
@@ -105,12 +103,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   ) {
     final newPassword = event.password;
     final passwordValid = _passwordValid(newPassword);
-    emit(state.copyWith(
-      password: newPassword,
-      passwordValid: passwordValid,
-      passwordError: PasswordError.noError,
-      authenticated: false,
-    ));
+    emit(
+      state.copyWith(
+        password: newPassword,
+        passwordValid: passwordValid,
+        passwordError: PasswordError.noError,
+        authenticated: false,
+      ),
+    );
   }
 
   bool _passwordValid(final String password) {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_manager/di/service_locator.dart';
@@ -9,7 +11,7 @@ import 'package:gift_manager/presentation/people/people_page.dart';
 import 'package:gift_manager/presentation/settings/settings_page.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class HomePage extends StatelessWidget {
 }
 
 class _HomePageWidget extends StatefulWidget {
-  const _HomePageWidget({Key? key}) : super(key: key);
+  const _HomePageWidget({super.key});
 
   @override
   State<_HomePageWidget> createState() => _HomePageWidgetState();
@@ -47,9 +49,11 @@ class _HomePageWidgetState extends State<_HomePageWidget> {
     return BlocListener<HomeBloc, HomeState>(
       listener: (context, state) {
         if (state is HomeGoToLogin) {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            RouteName.login.route,
-            (route) => false,
+          unawaited(
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              RouteName.login.route,
+              (route) => false,
+            ),
           );
         }
       },

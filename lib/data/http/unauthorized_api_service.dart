@@ -9,9 +9,9 @@ import 'package:gift_manager/data/http/model/refresh_token_response_dto.dart';
 import 'package:gift_manager/data/http/model/user_with_tokens_dto.dart';
 
 class UnauthorizedApiService extends BaseApiService {
-  final Dio _dio;
-
   UnauthorizedApiService(this._dio);
+
+  final Dio _dio;
 
   Future<Either<ApiError, UserWithTokensDto>> register({
     required final String email,
@@ -26,11 +26,11 @@ class UnauthorizedApiService extends BaseApiService {
         name: name,
         avatarUrl: avatarUrl,
       );
-      final response = await _dio.post(
+      final response = await _dio.post<dynamic>(
         '/auth/create',
         data: requestBody.toJson(),
       );
-      return UserWithTokensDto.fromJson(response.data);
+      return UserWithTokensDto.fromJson(response.data as Map<String, dynamic>);
     });
   }
 
@@ -43,11 +43,11 @@ class UnauthorizedApiService extends BaseApiService {
         email: email,
         password: password,
       );
-      final response = await _dio.post(
+      final response = await _dio.post<dynamic>(
         '/auth/login',
         data: requestBody.toJson(),
       );
-      return UserWithTokensDto.fromJson(response.data);
+      return UserWithTokensDto.fromJson(response.data as Map<String, dynamic>);
     });
   }
 
@@ -58,11 +58,11 @@ class UnauthorizedApiService extends BaseApiService {
       final requestBody = RefreshTokenRequestDto(
         refreshToken: refreshToken,
       );
-      final response = await _dio.post(
+      final response = await _dio.post<dynamic>(
         '/auth/refresh',
         data: requestBody.toJson(),
       );
-      return RefreshTokenResponseDto.fromJson(response.data);
+      return RefreshTokenResponseDto.fromJson(response.data as Map<String, dynamic>);
     });
   }
 }

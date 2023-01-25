@@ -15,14 +15,13 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: lightTheme,
       darkTheme: darkTheme,
-      // themeMode: ThemeMode.light,
       onGenerateRoute: generateRoute(),
     );
   }

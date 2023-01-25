@@ -32,23 +32,25 @@ void initServiceLocator() {
 
 /// ONLY SINGLETONS
 void _setupDataProviders() {
-  sl.registerLazySingleton(() => SharedPreferenceData());
-  sl.registerLazySingleton<RefreshTokenProvider>(
-    () => sl.get<SharedPreferenceData>(),
-  );
+  sl
+    ..registerLazySingleton(SharedPreferenceData.new)
+    ..registerLazySingleton<RefreshTokenProvider>(
+      () => sl.get<SharedPreferenceData>(),
+    );
 }
 
 /// ONLY SINGLETONS
 void _setupRepositories() {
-  sl.registerLazySingleton(
-    () => RefreshTokenRepository(sl.get<RefreshTokenProvider>()),
-  );
-  sl.registerLazySingleton(
-    () => UserRepository(sl.get<SharedPreferenceData>()),
-  );
-  sl.registerLazySingleton(
-    () => TokenRepository(sl.get<SharedPreferenceData>()),
-  );
+  sl
+    ..registerLazySingleton(
+      () => RefreshTokenRepository(sl.get<RefreshTokenProvider>()),
+    )
+    ..registerLazySingleton(
+      () => UserRepository(sl.get<SharedPreferenceData>()),
+    )
+    ..registerLazySingleton(
+      () => TokenRepository(sl.get<SharedPreferenceData>()),
+    );
 }
 
 /// ONLY SINGLETONS
@@ -66,68 +68,67 @@ void _setupInteractors() {
 void _setupComplexInteractors() {}
 
 void _setupApiRelatedClasses() {
-  sl.registerFactory(() => DioBuilder());
-  sl.registerLazySingleton(
-    () => AuthorizationInterceptor(
-      tokenRepository: sl.get<TokenRepository>(),
-      logoutInteractor: sl.get<LogoutInteractor>(),
-    ),
-  );
-  sl.registerSingleton<Dio>(
-    sl.get<DioBuilder>().build(),
-    instanceName: _notAuthorizedDio,
-  );
-  sl.registerSingleton<Dio>(
-    sl
-        .get<DioBuilder>()
-        .addAuthorizationInterceptor(sl.get<AuthorizationInterceptor>())
-        .build(),
-    instanceName: _authorizedDio,
-  );
-  sl.registerLazySingleton(
-    () => UnauthorizedApiService(sl.get<Dio>(instanceName: _notAuthorizedDio)),
-  );
-  sl.registerLazySingleton(
-    () => AuthorizedApiService(sl.get<Dio>(instanceName: _authorizedDio)),
-  );
+  sl
+    ..registerFactory(DioBuilder.new)
+    ..registerLazySingleton(
+      () => AuthorizationInterceptor(
+        tokenRepository: sl.get<TokenRepository>(),
+        logoutInteractor: sl.get<LogoutInteractor>(),
+      ),
+    )
+    ..registerSingleton<Dio>(
+      sl.get<DioBuilder>().build(),
+      instanceName: _notAuthorizedDio,
+    )
+    ..registerSingleton<Dio>(
+      sl.get<DioBuilder>().addAuthorizationInterceptor(sl.get<AuthorizationInterceptor>()).build(),
+      instanceName: _authorizedDio,
+    )
+    ..registerLazySingleton(
+      () => UnauthorizedApiService(sl.get<Dio>(instanceName: _notAuthorizedDio)),
+    )
+    ..registerLazySingleton(
+      () => AuthorizedApiService(sl.get<Dio>(instanceName: _authorizedDio)),
+    );
 }
 
 /// ONLY FACTORIES
 void _setupBlocs() {
-  sl.registerFactory(
-    () => LoginBloc(
-      userRepository: sl.get<UserRepository>(),
-      tokenRepository: sl.get<TokenRepository>(),
-      refreshTokenRepository: sl.get<RefreshTokenRepository>(),
-      unauthorizedApiService: sl.get<UnauthorizedApiService>(),
-    ),
-  );
-  sl.registerFactory(
-    () => RegistrationBloc(
-      userRepository: sl.get<UserRepository>(),
-      tokenRepository: sl.get<TokenRepository>(),
-      refreshTokenRepository: sl.get<RefreshTokenRepository>(),
-      unauthorizedApiService: sl.get<UnauthorizedApiService>(),
-    ),
-  );
-  sl.registerFactory(
-    () => SplashBloc(
-      tokenRepository: sl.get<TokenRepository>(),
-    ),
-  );
-  sl.registerFactory(
-    () => HomeBloc(
-      userRepository: sl.get<UserRepository>(),
-      logoutInteractor: sl.get<LogoutInteractor>(),
-      authorizedApiService: sl.get<AuthorizedApiService>(),
-      unauthorizedApiService: sl.get<UnauthorizedApiService>(),
-      refreshTokenRepository: sl.get<RefreshTokenRepository>(),
-      tokenRepository: sl.get<TokenRepository>(),
-    ),
-  );
-  sl.registerFactory(
-    () => GiftsBloc(
-      authorizedApiService: sl.get<AuthorizedApiService>(),
-    ),
-  );
+  sl
+    ..registerFactory(
+      () => LoginBloc(
+        userRepository: sl.get<UserRepository>(),
+        tokenRepository: sl.get<TokenRepository>(),
+        refreshTokenRepository: sl.get<RefreshTokenRepository>(),
+        unauthorizedApiService: sl.get<UnauthorizedApiService>(),
+      ),
+    )
+    ..registerFactory(
+      () => RegistrationBloc(
+        userRepository: sl.get<UserRepository>(),
+        tokenRepository: sl.get<TokenRepository>(),
+        refreshTokenRepository: sl.get<RefreshTokenRepository>(),
+        unauthorizedApiService: sl.get<UnauthorizedApiService>(),
+      ),
+    )
+    ..registerFactory(
+      () => SplashBloc(
+        tokenRepository: sl.get<TokenRepository>(),
+      ),
+    )
+    ..registerFactory(
+      () => HomeBloc(
+        userRepository: sl.get<UserRepository>(),
+        logoutInteractor: sl.get<LogoutInteractor>(),
+        authorizedApiService: sl.get<AuthorizedApiService>(),
+        unauthorizedApiService: sl.get<UnauthorizedApiService>(),
+        refreshTokenRepository: sl.get<RefreshTokenRepository>(),
+        tokenRepository: sl.get<TokenRepository>(),
+      ),
+    )
+    ..registerFactory(
+      () => GiftsBloc(
+        authorizedApiService: sl.get<AuthorizedApiService>(),
+      ),
+    );
 }

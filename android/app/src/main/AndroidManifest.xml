@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ru.skillbranch.gift_manager">
+    package="com.carapacik.giftmanager">
    <application
         android:label="gift_manager"
         android:name="${applicationName}"

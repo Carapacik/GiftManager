@@ -1,9 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_pretty_dio_logger/flutter_pretty_dio_logger.dart';
 import 'package:gift_manager/data/http/authorization_interceptor.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class DioBuilder {
+  DioBuilder() {
+    if (kDebugMode) {
+      _dio.interceptors.add(PrettyDioLogger());
+    }
+  }
+
   final Dio _dio = Dio(
     BaseOptions(
       baseUrl: 'https://giftmanager.skill-branch.ru/api',
@@ -13,26 +19,11 @@ class DioBuilder {
     ),
   );
 
-  DioBuilder() {
-    if (kDebugMode) {
-      _dio.interceptors.add(
-        PrettyDioLogger(
-          request: true,
-          requestHeader: false,
-          requestBody: false,
-          responseHeader: false,
-          responseBody: false,
-          error: true,
-        ),
-      );
-    }
-  }
-
   Dio build() => _dio;
 
-  DioBuilder addAuthorizationInterceptor(
-      final AuthorizationInterceptor interceptor) {
+  DioBuilder addAuthorizationInterceptor(final AuthorizationInterceptor interceptor) {
     _dio.interceptors.add(interceptor);
+    // ignore: avoid_returning_this
     return this;
   }
 }

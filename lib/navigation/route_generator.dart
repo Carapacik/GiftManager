@@ -32,9 +32,7 @@ RouteFactory generateRoute() {
       case RouteName.splash:
         return _createPageRoute(const SplashPage(), routeName);
       case RouteName.gift:
-        final args = settings.arguments is GiftPageArgs
-            ? settings.arguments as GiftPageArgs
-            : null;
+        final args = settings.arguments is GiftPageArgs? ? settings.arguments as GiftPageArgs? : null;
         if (args == null) {
           debugPrint('ADD ARGUMENTS!!!');
         }
@@ -46,9 +44,7 @@ RouteFactory generateRoute() {
   };
 }
 
-Route _createPageRoute(Widget page, RouteName routeName) {
-  return MaterialPageRoute(
-    builder: (_) => page,
-    settings: RouteSettings(name: routeName.name),
-  );
-}
+Route<dynamic> _createPageRoute(Widget page, RouteName routeName) => MaterialPageRoute(
+      builder: (_) => page,
+      settings: RouteSettings(name: routeName.name),
+    );

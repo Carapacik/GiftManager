@@ -30,7 +30,7 @@ class LoadedGiftsState extends GiftsState {
     required this.gifts,
     required this.showLoading,
     required this.showError,
-  }) : assert(!(showLoading && showError));
+  }) : assert(!(showLoading && showError), '');
 
   final List<GiftDto> gifts;
   final bool showLoading;

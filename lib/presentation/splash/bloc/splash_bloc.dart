@@ -8,13 +8,11 @@ part 'splash_event.dart';
 part 'splash_state.dart';
 
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
-  final TokenRepository tokenRepository;
-
-  SplashBloc({
-    required this.tokenRepository,
-  }) : super(SplashInitial()) {
+  SplashBloc({required this.tokenRepository}) : super(SplashInitial()) {
     on<SplashLoaded>(_onSplashLoaded);
   }
+
+  final TokenRepository tokenRepository;
 
   FutureOr<void> _onSplashLoaded(
     final SplashLoaded event,

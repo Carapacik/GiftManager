@@ -1,18 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_manager/data/model/request_error.dart';
 import 'package:gift_manager/di/service_locator.dart';
 import 'package:gift_manager/extensions/theme_extensions.dart';
 import 'package:gift_manager/navigation/route_name.dart';
-import 'package:gift_manager/presentation/home/view/home_page.dart';
 import 'package:gift_manager/presentation/login/bloc/login_bloc.dart';
 import 'package:gift_manager/presentation/login/model/email_error.dart';
 import 'package:gift_manager/presentation/login/model/password_error.dart';
-import 'package:gift_manager/presentation/registration/view/registration_page.dart';
 import 'package:gift_manager/resources/app_colors.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +26,7 @@ class LoginPage extends StatelessWidget {
 }
 
 class _LoginPageWidget extends StatefulWidget {
-  const _LoginPageWidget({
-    Key? key,
-  }) : super(key: key);
+  const _LoginPageWidget({super.key});
 
   @override
   State<_LoginPageWidget> createState() => _LoginPageWidgetState();
@@ -59,9 +57,11 @@ class _LoginPageWidgetState extends State<_LoginPageWidget> {
         BlocListener<LoginBloc, LoginState>(
           listener: (context, state) {
             if (state.authenticated) {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                RouteName.home.route,
-                (route) => false,
+              unawaited(
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  RouteName.home.route,
+                  (route) => false,
+                ),
               );
             }
           },
@@ -69,13 +69,15 @@ class _LoginPageWidgetState extends State<_LoginPageWidget> {
         BlocListener<LoginBloc, LoginState>(
           listener: (context, state) {
             if (state.requestError != RequestError.noError) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: const Text(
-                  'ПРОИЗОШЛА ОШИБКА',
-                  style: TextStyle(color: Colors.white),
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text(
+                    'ПРОИЗОШЛА ОШИБКА',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  backgroundColor: Colors.red[900],
                 ),
-                backgroundColor: Colors.red[900],
-              ));
+              );
               context.read<LoginBloc>().add(const LoginRequestErrorShowed());
             }
           },
@@ -86,7 +88,7 @@ class _LoginPageWidgetState extends State<_LoginPageWidget> {
           const SizedBox(height: 64),
           Center(
             child: Text(
-              "Вход",
+              'Вход',
               style: context.theme.h2,
             ),
           ),
@@ -104,7 +106,7 @@ class _LoginPageWidgetState extends State<_LoginPageWidget> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "Ещё нет аккаунта?",
+                'Ещё нет аккаунта?',
                 style: context.theme.h4.dynamicColor(
                   context: context,
                   lightThemeColor: AppColors.lightGrey60,
@@ -112,8 +114,7 @@ class _LoginPageWidgetState extends State<_LoginPageWidget> {
                 ),
               ),
               TextButton(
-                onPressed: () => Navigator.of(context)
-                    .pushNamed(RouteName.registration.route),
+                onPressed: () => unawaited(Navigator.of(context).pushNamed(RouteName.registration.route)),
                 child: const Text('Создать'),
               ),
             ],
@@ -131,9 +132,7 @@ class _LoginPageWidgetState extends State<_LoginPageWidget> {
 }
 
 class _LoginButton extends StatelessWidget {
-  const _LoginButton({
-    Key? key,
-  }) : super(key: key);
+  const _LoginButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -145,12 +144,8 @@ class _LoginButton extends StatelessWidget {
           selector: (state) => state.allFieldsValid,
           builder: (context, fieldsValid) {
             return ElevatedButton(
-              onPressed: fieldsValid
-                  ? () => context
-                      .read<LoginBloc>()
-                      .add(const LoginLoginButtonClicked())
-                  : null,
-              child: const Text("Войти"),
+              onPressed: fieldsValid ? () => context.read<LoginBloc>().add(const LoginLoginButtonClicked()) : null,
+              child: const Text('Войти'),
             );
           },
         ),
@@ -161,12 +156,11 @@ class _LoginButton extends StatelessWidget {
 
 class _EmailTextField extends StatelessWidget {
   const _EmailTextField({
-    Key? key,
     required FocusNode emailFocusNode,
     required FocusNode passwordFocusNode,
+    super.key,
   })  : _emailFocusNode = emailFocusNode,
-        _passwordFocusNode = passwordFocusNode,
-        super(key: key);
+        _passwordFocusNode = passwordFocusNode;
 
   final FocusNode _emailFocusNode;
   final FocusNode _passwordFocusNode;
@@ -180,16 +174,13 @@ class _EmailTextField extends StatelessWidget {
         builder: (context, emailError) {
           return TextField(
             focusNode: _emailFocusNode,
-            onChanged: (text) =>
-                context.read<LoginBloc>().add(LoginEmailChanged(text)),
+            onChanged: (text) => context.read<LoginBloc>().add(LoginEmailChanged(text)),
             onSubmitted: (_) => _passwordFocusNode.requestFocus(),
             autocorrect: false,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               labelText: 'Почта',
-              errorText: emailError == EmailError.noError
-                  ? null
-                  : emailError.toString(),
+              errorText: emailError == EmailError.noError ? null : emailError.toString(),
             ),
           );
         },
@@ -199,11 +190,7 @@ class _EmailTextField extends StatelessWidget {
 }
 
 class _PasswordTextField extends StatelessWidget {
-  const _PasswordTextField({
-    Key? key,
-    required FocusNode passwordFocusNode,
-  })  : _passwordFocusNode = passwordFocusNode,
-        super(key: key);
+  const _PasswordTextField({required FocusNode passwordFocusNode, super.key}) : _passwordFocusNode = passwordFocusNode;
 
   final FocusNode _passwordFocusNode;
 
@@ -219,15 +206,11 @@ class _PasswordTextField extends StatelessWidget {
             autocorrect: false,
             keyboardType: TextInputType.visiblePassword,
             obscureText: true,
-            onChanged: (text) =>
-                context.read<LoginBloc>().add(LoginPasswordChanged(text)),
-            onSubmitted: (_) =>
-                context.read<LoginBloc>().add(const LoginLoginButtonClicked()),
+            onChanged: (text) => context.read<LoginBloc>().add(LoginPasswordChanged(text)),
+            onSubmitted: (_) => context.read<LoginBloc>().add(const LoginLoginButtonClicked()),
             decoration: InputDecoration(
               labelText: 'Пароль',
-              errorText: passwordError == PasswordError.noError
-                  ? null
-                  : passwordError.toString(),
+              errorText: passwordError == PasswordError.noError ? null : passwordError.toString(),
             ),
           );
         },

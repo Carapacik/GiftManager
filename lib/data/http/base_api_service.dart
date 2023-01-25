@@ -10,18 +10,18 @@ class BaseApiService {
   ) async {
     try {
       return Right(await request());
-    } catch (e) {
+    } on Object catch (e) {
       return Left(_getApiError(e));
     }
   }
 
-  ApiError _getApiError(final dynamic e) {
+  ApiError _getApiError(final Object e) {
     if (e is DioError) {
       if (e.type == DioErrorType.response && e.response != null) {
         try {
-          final apiError = ApiError.fromJson(e.response!.data);
+          final apiError = ApiError.fromJson(e.response!.data as Map<String, dynamic>);
           return apiError;
-        } catch (apiE) {
+        } on Object catch (_) {
           return const ApiError(code: ApiErrorType.unknown);
         }
       }

@@ -4,42 +4,41 @@ import 'package:gift_manager/resources/app_colors.dart';
 final _base = ThemeData.light();
 
 final lightTheme = _base.copyWith(
-  backgroundColor: AppColors.lightWhite100,
   scaffoldBackgroundColor: AppColors.lightWhite100,
   textTheme: _base.textTheme.copyWith(
-    headline1: const TextStyle(
+    displayLarge: const TextStyle(
       fontSize: 32,
       fontWeight: FontWeight.w600,
       color: AppColors.lightBlack100,
     ),
-    headline2: const TextStyle(
+    displayMedium: const TextStyle(
       fontSize: 24,
       fontWeight: FontWeight.w600,
       color: AppColors.lightBlack100,
     ),
-    headline3: const TextStyle(
+    displaySmall: const TextStyle(
       fontSize: 16,
       height: 1.25,
       fontWeight: FontWeight.w500,
       color: AppColors.lightBlack100,
     ),
-    headline4: const TextStyle(
+    headlineMedium: const TextStyle(
       fontSize: 14,
       height: 1.15,
       fontWeight: FontWeight.w500,
       color: AppColors.lightBlack100,
     ),
-    headline5: const TextStyle(
+    headlineSmall: const TextStyle(
       fontSize: 12,
       fontWeight: FontWeight.w500,
       color: AppColors.lightBlack100,
     ),
-    headline6: const TextStyle(
+    titleLarge: const TextStyle(
       fontSize: 12,
       fontWeight: FontWeight.w400,
       color: AppColors.lightBlack100,
     ),
-    button: const TextStyle(
+    labelLarge: const TextStyle(
       fontSize: 14,
       height: 1.15,
       fontWeight: FontWeight.w700,
@@ -89,7 +88,7 @@ final lightTheme = _base.copyWith(
     ),
   ),
   inputDecorationTheme: _base.inputDecorationTheme.copyWith(
-    hintStyle: _base.primaryTextTheme.bodyText1!.copyWith(
+    hintStyle: _base.primaryTextTheme.bodyLarge!.copyWith(
       color: AppColors.lightGrey60,
       fontWeight: FontWeight.w500,
       fontSize: 16,
@@ -99,7 +98,7 @@ final lightTheme = _base.copyWith(
       color: AppColors.lightPink100,
     ),
     border: const UnderlineInputBorder(
-      borderSide: BorderSide(color: AppColors.black16, width: 1),
+      borderSide: BorderSide(color: AppColors.black16),
     ),
     focusedBorder: const UnderlineInputBorder(
       borderSide: BorderSide(color: AppColors.lightDarkBlue100, width: 2),
@@ -107,7 +106,7 @@ final lightTheme = _base.copyWith(
     errorBorder: const UnderlineInputBorder(
       borderSide: BorderSide(color: AppColors.lightPink100, width: 2),
     ),
-    labelStyle: _base.primaryTextTheme.bodyText1!.copyWith(
+    labelStyle: _base.primaryTextTheme.bodyLarge!.copyWith(
       color: AppColors.lightGrey60,
       fontWeight: FontWeight.w500,
       fontSize: 16,

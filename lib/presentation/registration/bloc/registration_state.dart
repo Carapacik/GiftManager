@@ -5,12 +5,6 @@ abstract class RegistrationState extends Equatable {
 }
 
 class RegistrationFieldsInfo extends RegistrationState {
-  final String avatarLink;
-  final RegistrationEmailError? emailError;
-  final RegistrationPasswordError? passwordError;
-  final RegistrationPasswordConfirmationError? passwordConfirmationError;
-  final RegistrationNameError? nameError;
-
   const RegistrationFieldsInfo({
     required this.avatarLink,
     this.emailError,
@@ -19,20 +13,20 @@ class RegistrationFieldsInfo extends RegistrationState {
     this.nameError,
   });
 
+  final String avatarLink;
+  final RegistrationEmailError? emailError;
+  final RegistrationPasswordError? passwordError;
+  final RegistrationPasswordConfirmationError? passwordConfirmationError;
+  final RegistrationNameError? nameError;
+
   @override
-  List<Object?> get props => [
-        avatarLink,
-        emailError,
-        passwordError,
-        passwordConfirmationError,
-        nameError
-      ];
+  List<Object?> get props => [avatarLink, emailError, passwordError, passwordConfirmationError, nameError];
 }
 
 class RegistrationError extends RegistrationState {
-  final RequestError requestError;
-
   const RegistrationError(this.requestError);
+
+  final RequestError requestError;
 
   @override
   List<Object?> get props => [requestError];

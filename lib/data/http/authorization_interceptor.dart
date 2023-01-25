@@ -5,16 +5,16 @@ import 'package:gift_manager/data/repository/token_repository.dart';
 import 'package:gift_manager/domain/logout_interactor.dart';
 
 class AuthorizationInterceptor extends Interceptor {
-  final TokenRepository tokenRepository;
-  final LogoutInteractor logoutInteractor;
-
   AuthorizationInterceptor({
     required this.tokenRepository,
     required this.logoutInteractor,
   });
 
+  final TokenRepository tokenRepository;
+  final LogoutInteractor logoutInteractor;
+
   @override
-  void onRequest(
+  Future<void> onRequest(
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
@@ -28,7 +28,7 @@ class AuthorizationInterceptor extends Interceptor {
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) async {
+  Future<void> onError(DioError err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 403) {
       await logoutInteractor.logout();
     }

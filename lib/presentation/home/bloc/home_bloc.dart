@@ -35,11 +35,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<HomePageLoaded>(_onHomePageLoaded);
     on<HomeLogoutPushed>(_onLogoutPushed);
     on<HomeExternalLogout>(_onHomeExternalLogout);
-    _logoutSubscription = userRepository
-        .observeItem()
-        .where((user) => user == null)
-        .take(1)
-        .listen((_) => _logout());
+    _logoutSubscription = userRepository.observeItem().where((user) => user == null).take(1).listen((_) => _logout());
   }
 
   FutureOr<void> _onHomePageLoaded(
@@ -53,18 +49,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       return;
     }
 
-    final refreshTokenResponse =
-        await unauthorizedApiService.refreshToken(refreshToken: refreshToken);
+    final refreshTokenResponse = await unauthorizedApiService.refreshToken(refreshToken: refreshToken);
     if (refreshTokenResponse.isLeft) {
       _logout();
       return;
     }
-    await refreshTokenRepository
-        .setItem(refreshTokenResponse.right.refreshToken);
+    await refreshTokenRepository.setItem(refreshTokenResponse.right.refreshToken);
     await tokenRepository.setItem(refreshTokenResponse.right.token);
     final giftsResponse = await authorizedApiService.getAllGifts();
-    final gifts =
-        giftsResponse.isRight ? giftsResponse.right.gifts : const <GiftDto>[];
+    final gifts = giftsResponse.isRight ? giftsResponse.right.gifts : const <GiftDto>[];
     print('GOT GIFTS: $gifts');
     emit(HomeWithUserInfo(user: user, gifts: gifts));
   }

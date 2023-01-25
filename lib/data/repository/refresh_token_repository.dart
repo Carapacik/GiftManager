@@ -16,6 +16,5 @@ class RefreshTokenRepository extends ReactiveRepository<String> {
   Future<String?> getRawData() => _refreshTokenProvider.getRefreshToken();
 
   @override
-  Future<bool> saveRawData(String? item) =>
-      _refreshTokenProvider.setRefreshToken(item);
+  Future<bool> saveRawData(String? item) => _refreshTokenProvider.setRefreshToken(item);
 }
